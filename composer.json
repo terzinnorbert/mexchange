@@ -1,0 +1,14 @@
+{
+    "name": "terzinnorbert/mexchange",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Terzin Norbert",
+            "email": "terzin.norbert@gmail.com"
+        }
+    ],
+    "require": {
+	"php": "^8.0"
+    }
+}
