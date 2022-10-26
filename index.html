@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mastercard USD/EUR - HUF exchanger</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <script src="//unpkg.com/alpinejs" defer></script>
+
+<script>
+let exchange = function () {
+    return {
+        usd: 0,
+        usd_price: 1,
+        eur: 0,
+        eur_price: 1,
+        init() {
+            fetch('/', {method: 'post'})
+                .then(response => response.json())
+                .then(data => {
+                    this.usd = data.usd;
+                    this.eur = data.eur;
+                    console.log(data);
+                });
+        }
+    };
+}
+</script>
+  </head>
+  <body>
+  <section class="section" x-data="exchange">
+    <div class="container">
+      <h1 class="title">
+        Mastercard exchange
+      </h1>
+      <div class="columns">
+        <div class="column is-one-quarter">
+            <div class="field is-expanded">
+                <div class="field has-addons">
+                  <p class="control">
+                    <a class="button is-static">
+                      USD to HUF
+                    </a>
+                  </p>
+                  <p class="control is-expanded">
+                    <input class="input" type="text" x-model="usd" readonly>
+                  </p>
+                </div>
+        </div>
+        </div>
+          <div class="column is-one-quarter">
+            <div class="field is-expanded">
+                <div class="field has-addons">
+                  <p class="control">
+                    <a class="button is-static">
+                      Price [USD]
+                    </a>
+                  </p>
+                  <p class="control is-expanded">
+                    <input class="input" type="text" x-model="usd_price">
+                  </p>
+                </div>
+        </div>
+        </div>
+          <div class="column is-one-quarter">
+            <div class="field is-expanded">
+                <div class="field has-addons">
+                  <p class="control">
+                    <a class="button is-static">
+                      SUM [HUF]
+                    </a>
+                  </p>
+                  <p class="control is-expanded">
+                    <input class="input" type="text" x-bind:value="(usd_price * usd).toFixed(2)" readonly>
+                  </p>
+                </div>
+        </div>
+        </div>
+      </div>
+        <div class="columns">
+            <div class="column is-one-quarter">
+                <div class="field is-expanded">
+                    <div class="field has-addons">
+                      <p class="control">
+                        <a class="button is-static">
+                          EUR to HUF
+                        </a>
+                      </p>
+                      <p class="control is-expanded">
+                        <input class="input" type="text" x-model="eur" readonly>
+                      </p>
+                    </div>
+            </div>
+
+      </div>
+            <div class="column is-one-quarter">
+            <div class="field is-expanded">
+                <div class="field has-addons">
+                  <p class="control">
+                    <a class="button is-static">
+                      Price [EUR]
+                    </a>
+                  </p>
+                  <p class="control is-expanded">
+                    <input class="input" type="text" x-model="eur_price">
+                  </p>
+                </div>
+        </div>
+        </div>
+          <div class="column is-one-quarter">
+            <div class="field is-expanded">
+                <div class="field has-addons">
+                  <p class="control">
+                    <a class="button is-static">
+                      SUM [HUF]
+                    </a>
+                  </p>
+                  <p class="control is-expanded">
+                    <input class="input" type="text" x-bind:value="(eur_price * eur).toFixed(2)" readonly>
+                  </p>
+                </div>
+        </div>
+        </div>
+        </div>
+    </div>
+  </section>
+  </body>
+</html>
