@@ -10,18 +10,21 @@
 <script>
 let exchange = function () {
     return {
-        usd: 0,
-        usd_price: 1,
-        eur: 0,
-        eur_price: 1,
+        rates: {},
+        prices: {},
         init() {
             fetch('/', {method: 'post'})
                 .then(response => response.json())
                 .then(data => {
-                    this.usd = data.usd;
-                    this.eur = data.eur;
-                    console.log(data);
+                    delete (data.date);
+                    this.rates = data;
+                    for (const [key] of Object.entries(this.rates)) {
+                        this.prices[key] = 1;
+                    }
                 });
+        },
+        getSum(rate, currency) {
+            return (this.prices[currency] * rate).toFixed(2)
         }
     };
 }
@@ -33,17 +36,17 @@ let exchange = function () {
       <h1 class="title">
         Mastercard exchange
       </h1>
-      <div class="columns">
+        <template x-for="(rate, currency) in rates">
+        <div class="columns">
         <div class="column is-one-quarter">
             <div class="field is-expanded">
                 <div class="field has-addons">
                   <p class="control">
-                    <a class="button is-static">
-                      USD to HUF
+                    <a class="button is-static" x-text="currency.toUpperCase()+' to HUF'">
                     </a>
                   </p>
                   <p class="control is-expanded">
-                    <input class="input" type="text" x-model="usd" readonly>
+                    <input class="input" type="text" x-bind:value="rate" readonly>
                   </p>
                 </div>
         </div>
@@ -52,57 +55,11 @@ let exchange = function () {
             <div class="field is-expanded">
                 <div class="field has-addons">
                   <p class="control">
-                    <a class="button is-static">
-                      Price [USD]
+                    <a class="button is-static" x-text="'Price ['+currency.toUpperCase()+']'">
                     </a>
                   </p>
                   <p class="control is-expanded">
-                    <input class="input" type="text" x-model="usd_price">
-                  </p>
-                </div>
-        </div>
-        </div>
-          <div class="column is-one-quarter">
-            <div class="field is-expanded">
-                <div class="field has-addons">
-                  <p class="control">
-                    <a class="button is-static">
-                      SUM [HUF]
-                    </a>
-                  </p>
-                  <p class="control is-expanded">
-                    <input class="input" type="text" x-bind:value="(usd_price * usd).toFixed(2)" readonly>
-                  </p>
-                </div>
-        </div>
-        </div>
-      </div>
-        <div class="columns">
-            <div class="column is-one-quarter">
-                <div class="field is-expanded">
-                    <div class="field has-addons">
-                      <p class="control">
-                        <a class="button is-static">
-                          EUR to HUF
-                        </a>
-                      </p>
-                      <p class="control is-expanded">
-                        <input class="input" type="text" x-model="eur" readonly>
-                      </p>
-                    </div>
-            </div>
-
-      </div>
-            <div class="column is-one-quarter">
-            <div class="field is-expanded">
-                <div class="field has-addons">
-                  <p class="control">
-                    <a class="button is-static">
-                      Price [EUR]
-                    </a>
-                  </p>
-                  <p class="control is-expanded">
-                    <input class="input" type="text" x-model="eur_price">
+                    <input class="input" type="text" x-model="prices[currency]">
                   </p>
                 </div>
         </div>
@@ -116,12 +73,13 @@ let exchange = function () {
                     </a>
                   </p>
                   <p class="control is-expanded">
-                    <input class="input" type="text" x-bind:value="(eur_price * eur).toFixed(2)" readonly>
+                    <input class="input" type="text" x-bind:value="getSum(rate,currency)" readonly>
                   </p>
                 </div>
         </div>
         </div>
-        </div>
+      </div>
+    </template>
     </div>
   </section>
   </body>

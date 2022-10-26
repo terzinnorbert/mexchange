@@ -1,4 +1,5 @@
 <?php
+$config = require "config.php";
 
 if ('POST' !== $_SERVER['REQUEST_METHOD']) {
     echo file_get_contents('index.html');
@@ -9,8 +10,7 @@ if ('POST' !== $_SERVER['REQUEST_METHOD']) {
 if (!file_exists('cache.json')) {
     $cache = [
         'date' => strtotime('-1 day'),
-        'usd'  => 0,
-        'eur'  => 0,
+        ...array_fill_keys($config['currencies'], 0),
     ];
 } else {
     $cache = json_decode(file_get_contents('cache.json'), true, 512, JSON_THROW_ON_ERROR);
@@ -25,8 +25,9 @@ function getExchange($type)
 }
 
 if ($cache['date'] < strtotime('-6 hours')) {
-    $cache['usd'] = getExchange('USD');
-    $cache['eur'] = getExchange('EUR');
+    foreach ($config['currencies'] as $currency) {
+        $cache[$currency] = getExchange(strtoupper($currency));
+    }
     $cache['date'] = time();
     file_put_contents('cache.json', json_encode($cache, JSON_THROW_ON_ERROR));
 }
